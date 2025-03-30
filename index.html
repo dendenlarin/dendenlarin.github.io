@@ -1,1 +1,49 @@
-Hello World
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Мой блог</title>
+    <link rel="stylesheet" href="./css/style.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Мой блог</h1>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Главная</a></li>
+                    <li><a href="posts.html">Статьи</a></li>
+                    <li><a href="about.html">Обо мне</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="latest-posts">
+            <h2>Последние статьи</h2>
+            <div class="posts-grid">
+                <article class="post-card">
+                    <h3><a href="posts/first-post.html">Первая статья</a></h3>
+                    <p class="post-date">30 марта 2024</p>
+                    <p class="post-excerpt">Краткое описание первой статьи блога...</p>
+                    <a href="posts/first-post.html" class="read-more">Читать далее</a>
+                </article>
+                <article class="post-card">
+                    <h3><a href="posts/second-post.html">Вторая статья</a></h3>
+                    <p class="post-date">30 марта 2024</p>
+                    <p class="post-excerpt">Краткое описание второй статьи блога...</p>
+                    <a href="posts/second-post.html" class="read-more">Читать далее</a>
+                </article>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 Мой блог. Все права защищены.</p>
+        </div>
+    </footer>
+</body>
+</html>
