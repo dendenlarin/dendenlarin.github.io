@@ -4,16 +4,36 @@
     const listTemplate = document.getElementById('list-template');
     const cardTemplate = document.getElementById('card-template');
 
-    function save() {
+    async function save() {
         const data = Array.from(board.children).map(list => ({
             title: list.querySelector('.list-title').value,
             cards: Array.from(list.querySelectorAll('.card-text')).map(c => c.textContent)
         }));
         localStorage.setItem('simple-trello-data', JSON.stringify(data));
+        try {
+            await fetch('/api/board', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+        } catch (e) {
+            // ignore network errors
+        }
     }
 
-    function load() {
-        const data = JSON.parse(localStorage.getItem('simple-trello-data') || '[]');
+    async function load() {
+        let data = [];
+        try {
+            const resp = await fetch('/api/board');
+            if (resp.ok) {
+                data = await resp.json();
+            }
+        } catch (e) {
+            // ignore network errors
+        }
+        if (!data.length) {
+            data = JSON.parse(localStorage.getItem('simple-trello-data') || '[]');
+        }
         data.forEach(listData => {
             const listEl = createList(listData.title);
             listData.cards.forEach(text => addCard(listEl, text));
