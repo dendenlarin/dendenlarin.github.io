@@ -1,0 +1,14 @@
+{
+  "name": "docs-service",
+  "version": "1.0.0",
+  "description": "Technical documentation service with API tester",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "marked": "^9.1.5"
+  }
+}

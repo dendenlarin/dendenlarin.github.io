@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>API Тестер</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>API Тестер</h1>
+    <div>
+        <label>URL: <input type="text" id="url" size="50"></label>
+    </div>
+    <div>
+        <label>Метод:
+            <select id="method">
+                <option>GET</option>
+                <option>POST</option>
+                <option>PUT</option>
+                <option>DELETE</option>
+            </select>
+        </label>
+    </div>
+    <div>
+        <label>Тело запроса:<br>
+            <textarea id="body" rows="6" cols="60"></textarea>
+        </label>
+    </div>
+    <button id="send">Отправить</button>
+    <pre id="result"></pre>
+    <script src="js/api-tester.js"></script>
+</body>
+</html>
