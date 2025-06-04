@@ -1,0 +1,13 @@
+{
+  "name": "nasa-service",
+  "version": "1.0.0",
+  "description": "Simple web service using NASA APIs",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
