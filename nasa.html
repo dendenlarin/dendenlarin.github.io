@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NASA API Demo</title>
+    <link rel="stylesheet" href="./css/style.css">
+    <style>
+        #mars-photos img { max-width: 100%; margin-bottom: 1rem; }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Мой блог</h1>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Главная</a></li>
+                    <li><a href="posts.html">Статьи</a></li>
+                    <li><a href="about.html">Обо мне</a></li>
+                    <li><a href="board.html">Trello</a></li>
+                    <li><a href="nasa.html">NASA</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <section id="apod">
+            <h2>Фото дня</h2>
+            <div id="apod-content">Загрузка...</div>
+        </section>
+
+        <section id="mars">
+            <h2>Фото с Марса</h2>
+            <form id="mars-form">
+                <label>Sol: <input type="number" id="sol" value="1000"></label>
+                <label>
+                    Камера:
+                    <select id="camera">
+                        <option value="fhaz">FHAZ</option>
+                        <option value="rhaz">RHAZ</option>
+                        <option value="navcam">NAVCAM</option>
+                    </select>
+                </label>
+                <button type="submit">Загрузить</button>
+            </form>
+            <div id="mars-photos"></div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 Мой блог. Все права защищены.</p>
+        </div>
+    </footer>
+    <script src="js/nasa.js"></script>
+</body>
+</html>
