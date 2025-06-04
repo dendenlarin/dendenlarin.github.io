@@ -1,0 +1,93 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    background-color: #026aa7;
+    color: #fff;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 1.5rem;
+}
+
+header button {
+    background-color: #5aac44;
+    border: none;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+.board {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 10px;
+    overflow-x: auto;
+}
+
+.list {
+    background-color: #e2e4e6;
+    border-radius: 3px;
+    width: 250px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+}
+
+.list-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.list-title {
+    border: none;
+    font-weight: bold;
+    flex: 1;
+    background: transparent;
+}
+
+.cards {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.card {
+    background-color: #fff;
+    border-radius: 3px;
+    padding: 8px;
+    cursor: grab;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.add-card, .delete-list, .delete-card {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    color: #333;
+}
+
+.add-card {
+    margin-top: 10px;
+    color: #5aac44;
+}
+
+.delete-list, .delete-card {
+    color: #b04632;
+}
