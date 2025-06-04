@@ -1,33 +1,35 @@
-const express = require('express');
-const bodyParser = require('body-parser');
-const fs = require('fs');
-const path = require('path');
+import express from 'express';
+import { promises as fs } from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
 const PORT = process.env.PORT || 3001;
-const DATA_FILE = path.join(__dirname, 'board.json');
+const DATA_FILE = process.env.BOARD_FILE || path.join(__dirname, 'board.json');
 
-app.use(bodyParser.json());
+app.use(express.json());
 app.use(express.static(path.join(__dirname, '..')));
 
-function readData() {
+async function readData() {
   try {
-    return JSON.parse(fs.readFileSync(DATA_FILE, 'utf-8'));
-  } catch (e) {
+    const text = await fs.readFile(DATA_FILE, 'utf-8');
+    return JSON.parse(text);
+  } catch {
     return [];
   }
 }
 
-function writeData(data) {
-  fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2));
+async function writeData(data) {
+  await fs.writeFile(DATA_FILE, JSON.stringify(data, null, 2));
 }
 
-app.get('/api/board', (req, res) => {
-  res.json(readData());
+app.get('/api/board', async (req, res) => {
+  res.json(await readData());
 });
 
-app.post('/api/board', (req, res) => {
-  writeData(req.body);
+app.post('/api/board', async (req, res) => {
+  await writeData(req.body);
   res.json({ status: 'ok' });
 });
 
