@@ -73,15 +73,48 @@ header button {
     gap: 8px;
 }
 
-.card {
-    background-color: #fff;
-    border-radius: 3px;
-    padding: 8px;
-    cursor: grab;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
+    .card {
+        background-color: #fff;
+        border-radius: 3px;
+        padding: 8px;
+        cursor: grab;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+    }
+
+    .card-body {
+        flex-grow: 1;
+    }
+
+    .card-meta {
+        font-size: 0.8em;
+        color: #555;
+    }
+
+    .modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0,0,0,0.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .modal-content {
+        background: #fff;
+        padding: 20px;
+        border-radius: 4px;
+        width: 300px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .hidden { display: none; }
 
 .add-card, .delete-list, .delete-card {
     background-color: transparent;
@@ -120,10 +153,24 @@ header button {
 
 <template id="card-template">
     <div class="card" draggable="true">
-        <span class="card-text"></span>
+        <div class="card-body">
+            <div class="card-text"></div>
+            <div class="card-meta"></div>
+        </div>
         <button class="delete-card">×</button>
     </div>
 </template>
+
+<div id="cardModal" class="modal hidden">
+    <div class="modal-content">
+        <label>Название<input id="modalTitle"></label>
+        <label>Описание<textarea id="modalDesc"></textarea></label>
+        <label>Ответственный<input id="modalAssignee"></label>
+        <label>Срок<input type="date" id="modalDue"></label>
+        <button id="saveCard">Сохранить</button>
+        <button id="closeModal" type="button">Закрыть</button>
+    </div>
+</div>
 
 <script>
 (function () {
@@ -132,10 +179,24 @@ header button {
     const listTemplate = document.getElementById('list-template');
     const cardTemplate = document.getElementById('card-template');
 
+    const modal = document.getElementById('cardModal');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalDesc = document.getElementById('modalDesc');
+    const modalAssignee = document.getElementById('modalAssignee');
+    const modalDue = document.getElementById('modalDue');
+    const saveCardBtn = document.getElementById('saveCard');
+    const closeModalBtn = document.getElementById('closeModal');
+    let currentCard = null;
+
     function save() {
         const data = Array.from(board.children).map(list => ({
             title: list.querySelector('.list-title').value,
-            cards: Array.from(list.querySelectorAll('.card-text')).map(c => c.textContent)
+            cards: Array.from(list.querySelectorAll('.card')).map(card => ({
+                title: card.querySelector('.card-text').textContent,
+                description: card.dataset.description || '',
+                assignee: card.dataset.assignee || '',
+                due: card.dataset.due || ''
+            }))
         }));
         localStorage.setItem('simple-trello-data', JSON.stringify(data));
     }
@@ -144,7 +205,7 @@ header button {
         const data = JSON.parse(localStorage.getItem('simple-trello-data') || '[]');
         data.forEach(listData => {
             const listEl = createList(listData.title);
-            listData.cards.forEach(text => addCard(listEl, text));
+            (listData.cards || []).forEach(card => addCard(listEl, card));
         });
     }
 
@@ -171,16 +232,60 @@ header button {
         return listEl;
     }
 
-    function addCard(listEl, text) {
+    function updateMeta(cardEl) {
+        const meta = [];
+        if (cardEl.dataset.assignee) meta.push('\u{1F464} ' + cardEl.dataset.assignee);
+        if (cardEl.dataset.due) meta.push('\u{1F4C5} ' + cardEl.dataset.due);
+        cardEl.querySelector('.card-meta').textContent = meta.join(' ');
+    }
+
+    function openModal(cardEl) {
+        currentCard = cardEl;
+        modalTitle.value = cardEl.querySelector('.card-text').textContent;
+        modalDesc.value = cardEl.dataset.description || '';
+        modalAssignee.value = cardEl.dataset.assignee || '';
+        modalDue.value = cardEl.dataset.due || '';
+        modal.classList.remove('hidden');
+    }
+
+    function closeModal() {
+        modal.classList.add('hidden');
+        currentCard = null;
+    }
+
+    closeModalBtn.addEventListener('click', closeModal);
+    modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
+
+    saveCardBtn.addEventListener('click', () => {
+        if (!currentCard) return;
+        currentCard.querySelector('.card-text').textContent = modalTitle.value;
+        currentCard.dataset.description = modalDesc.value;
+        currentCard.dataset.assignee = modalAssignee.value;
+        currentCard.dataset.due = modalDue.value;
+        updateMeta(currentCard);
+        save();
+        closeModal();
+    });
+
+    function addCard(listEl, data) {
         const cardEl = cardTemplate.content.firstElementChild.cloneNode(true);
         cardEl.id = 'card-' + Math.random().toString(36).substr(2, 9);
-        cardEl.querySelector('.card-text').textContent = text;
+        const d = typeof data === 'string' ? { title: data } : data;
+        cardEl.querySelector('.card-text').textContent = d.title || '';
+        cardEl.dataset.description = d.description || '';
+        cardEl.dataset.assignee = d.assignee || '';
+        cardEl.dataset.due = d.due || '';
+        updateMeta(cardEl);
         cardEl.querySelector('.delete-card').addEventListener('click', () => {
             cardEl.remove();
             save();
         });
         cardEl.addEventListener('dragstart', e => {
             e.dataTransfer.setData('text/plain', cardEl.id);
+        });
+        cardEl.addEventListener('click', e => {
+            if (e.target.classList.contains('delete-card')) return;
+            openModal(cardEl);
         });
         listEl.querySelector('.cards').appendChild(cardEl);
         save();
